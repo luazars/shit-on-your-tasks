@@ -40,10 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
         body: ListView.builder(
           itemCount: Firebase.getUser().tasks?.length,
           itemBuilder: (BuildContext context, int index) {
-            return SingleEntry(
-              Firebase.getUser().tasks?[index],
-              false,
-            );
+            return SingleEntry(Firebase.getUser().tasks?[index], false, index);
           },
         ),
         floatingActionButton: FloatingActionButton(

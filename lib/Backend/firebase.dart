@@ -45,4 +45,21 @@ class Firebase {
   static UserModel getUser() {
     return loggedInUser;
   }
+
+  static void removeEntryFromFirestore(int index) async {
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+
+    List? testTasks = loggedInUser.tasks;
+    testTasks?.removeAt(index);
+
+    loggedInUser.tasks = testTasks;
+
+    await firebaseFirestore
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .set(loggedInUser.toMap())
+        .onError((error, stackTrace) =>
+            Fluttertoast.showToast(msg: error.toString()));
+    Fluttertoast.showToast(msg: "Removed succes");
+  }
 }
