@@ -37,15 +37,30 @@ class _HomeScreenState extends State<HomeScreen> {
                 }),
           ],
         ),
-        body: ListView.builder(
-          itemCount: Firebase.getUser().tasks?.length,
+        body: ReorderableListView.builder(
+          onReorder: ((oldIndex, newIndex) =>
+              Firebase.reorderTiles(oldIndex, newIndex)),
+          itemCount: Firebase.getUser().tasks!.length,
           itemBuilder: (BuildContext context, int index) {
-            return SingleEntry(Firebase.getUser().tasks?[index], false, index);
+            return Dismissible(
+              key: ValueKey("$index fdsaf ${Firebase.getUser().tasks![index]}"),
+              onDismissed: (value) {
+                setState(() {
+                  Firebase.removeEntryFromFirestore(index);
+                });
+              },
+              child:
+                  SingleEntry(Firebase.getUser().tasks?[index], false, index),
+            );
           },
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: (() => Navigator.of(context).push(MaterialPageRoute(
-              builder: ((context) => AddTaskScreen(setStateOnHomescreen))))),
+          onPressed: (() {
+            setState(() {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: ((context) => AddTaskScreen(setStateOnHomescreen))));
+            });
+          }),
           child: const Icon(Icons.add_rounded),
         ));
   }

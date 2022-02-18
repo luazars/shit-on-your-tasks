@@ -62,4 +62,30 @@ class Firebase {
             Fluttertoast.showToast(msg: error.toString()));
     Fluttertoast.showToast(msg: "Removed succes");
   }
+
+  static void reorderTiles(int oldIndex, int newIndex) async {
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+
+    List? testTasks = loggedInUser.tasks;
+    print(oldIndex);
+    print(newIndex);
+
+    if (oldIndex < newIndex) {
+      newIndex -= 1;
+    }
+    RangeError.checkValidIndex(oldIndex, testTasks, 'oldIndex');
+    RangeError.checkValidIndex(newIndex, testTasks, 'newIndex');
+    final String item = testTasks!.removeAt(oldIndex);
+    testTasks.insert(newIndex, item);
+
+    loggedInUser.tasks = testTasks;
+
+    await firebaseFirestore
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser?.uid)
+        .set(loggedInUser.toMap())
+        .onError((error, stackTrace) =>
+            Fluttertoast.showToast(msg: error.toString()));
+    Fluttertoast.showToast(msg: "Rearrange succes");
+  }
 }

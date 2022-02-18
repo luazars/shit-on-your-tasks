@@ -14,41 +14,36 @@ class SingleEntry extends StatelessWidget {
   Widget build(BuildContext context) {
     final _formKey = GlobalKey<FormState>();
     return InkWell(
-      child: Dismissible(
-        key: _formKey,
-        onDismissed: (value) => Firebase.removeEntryFromFirestore(_index),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 10,
-              width: double.infinity,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Container(
-                width: 500,
-                child: ListTile(
-                  leading: Checkbox(
-                    value: _done,
-                    onChanged: (bool? value) {
-                      null;
-                    },
-                  ),
-                  title: Text(_title),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete_outline_rounded),
-                    onPressed: () => null,
-                    color: Colors.red,
-                  ),
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 10,
+            width: double.infinity,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Container(
+              width: 500,
+              child: ListTile(
+                leading: Checkbox(
+                  value: _done,
+                  onChanged: (bool? value) {
+                    null;
+                  },
                 ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Theme.of(context).cardColor,
+                title: Text(_title),
+                trailing: IconButton(
+                  icon: const Icon(Icons.menu_rounded),
+                  onPressed: () => null,
                 ),
               ),
-            )
-          ],
-        ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Theme.of(context).cardColor,
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
