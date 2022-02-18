@@ -1,0 +1,172 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:login_register/screens/home_screen.dart';
+import 'package:login_register/screens/register_screen.dart';
+
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  // form key
+  final _formKey = GlobalKey<FormState>();
+
+  //editing controller
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    final _auth = FirebaseAuth.instance;
+
+    void signIn(String email, String password) async {
+      if (_formKey.currentState!.validate()) {
+        try {
+          await _auth
+              .signInWithEmailAndPassword(email: email, password: password)
+              .then((uid) => {
+                    Fluttertoast.showToast(msg: "Login Successful"),
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => const HomeScreen())),
+                  });
+        } on FirebaseAuthException catch (error) {
+          Fluttertoast.showToast(msg: error.code);
+        }
+      }
+    }
+
+    final loginButton = Material(
+      elevation: 5,
+      borderRadius: BorderRadius.circular(10),
+      child: MaterialButton(
+        padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+        minWidth: MediaQuery.of(context).size.width,
+        onPressed: () {
+          signIn(emailController.text, passwordController.text);
+        },
+        child: const Text(
+          "Login",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+
+    final signUpText = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text("Don't have an account? "),
+        GestureDetector(
+          onTap: () => Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const RegisterScreen())),
+          child: Text(
+            "SignUp",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.secondary),
+          ),
+        )
+      ],
+    );
+
+    final emailTextField = Column(
+      children: [
+        TextFormField(
+          autofocus: false,
+          controller: emailController,
+          keyboardType: TextInputType.emailAddress,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return ("Please enter your Email");
+            }
+            if (value.toString().length < 4) {
+              return ("Please enter a real Email");
+            }
+            return null;
+          },
+          obscureText: false,
+          onSaved: (value) {
+            emailController.text = value!;
+          },
+          textInputAction: TextInputAction.next,
+          decoration: InputDecoration(
+            prefixIcon: const Icon(Icons.email_rounded),
+            contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+            hintText: "Email",
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+        const SizedBox(height: 25)
+      ],
+    );
+
+    final passwordTextField = Column(
+      children: [
+        TextFormField(
+          autofocus: false,
+          controller: passwordController,
+          keyboardType: TextInputType.text,
+          validator: (value) {
+            if (value!.isEmpty) {
+              return ("Please enter your Password");
+            }
+            return null;
+          },
+          obscureText: true,
+          onSaved: (value) {
+            passwordController.text = value!;
+          },
+          textInputAction: TextInputAction.done,
+          decoration: InputDecoration(
+            prefixIcon: const Icon(Icons.vpn_key_rounded),
+            contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+            hintText: "Password",
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+        const SizedBox(height: 25)
+      ],
+    );
+
+    return Scaffold(
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Image.network(
+                    "https://www.pngkit.com/png/full/310-3107626_dog-pooping-silhouette-at-getdrawings-information.png",
+                    height: 200,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  const SizedBox(height: 65),
+                  emailTextField,
+                  passwordTextField,
+                  loginButton,
+                  const SizedBox(height: 25),
+                  signUpText,
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
