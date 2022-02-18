@@ -276,15 +276,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
     User? user = _auth.currentUser;
 
+    List<String> listString = List.empty();
+    List<bool> listBool = List.empty();
+
     UserModel userModel = UserModel();
-    userModel.email = user!.email;
-    userModel.uid = user.uid;
+    userModel.email = user?.email;
+    userModel.uid = user?.uid;
     userModel.firstName = firstNameEditingController.text;
     userModel.secondName = secondNameEditingController.text;
+    userModel.tasks = listString;
+    userModel.tasksIsDone = listBool;
 
     await firebaseFirestore
         .collection("users")
-        .doc(user.uid)
+        .doc(user?.uid)
         .set(userModel.toMap())
         .onError((error, stackTrace) => print(error.toString()));
     Fluttertoast.showToast(msg: "Account succes");

@@ -49,8 +49,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Firebase.removeEntryFromFirestore(index);
                 });
               },
-              child:
-                  SingleEntry(Firebase.getUser().tasks?[index], false, index),
+              child: SingleEntry(Firebase.getUser().tasks?[index], index,
+                  setStateOnHomescreen),
             );
           },
         ),

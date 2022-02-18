@@ -4,10 +4,10 @@ import 'package:login_register/screens/home_screen.dart';
 
 class SingleEntry extends StatelessWidget {
   final String _title;
-  final bool _done;
   final int _index;
+  final Function setState;
 
-  const SingleEntry(this._title, this._done, this._index, {Key? key})
+  const SingleEntry(this._title, this._index, this.setState, {Key? key})
       : super(key: key);
 
   @override
@@ -26,9 +26,10 @@ class SingleEntry extends StatelessWidget {
               width: 500,
               child: ListTile(
                 leading: Checkbox(
-                  value: _done,
-                  onChanged: (bool? value) {
-                    null;
+                  value: Firebase.loggedInUser.tasksIsDone![_index],
+                  onChanged: (value) {
+                    Firebase.changeTaskIsDone(value!, _index);
+                    setState();
                   },
                 ),
                 title: Text(_title),
