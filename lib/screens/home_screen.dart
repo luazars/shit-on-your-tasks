@@ -41,6 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
           onReorder: ((oldIndex, newIndex) =>
               Firebase.reorderTiles(oldIndex, newIndex)),
           itemCount: Firebase.getUser().tasks!.length,
+          primary: true,
+          padding: const EdgeInsets.all(10),
           itemBuilder: (BuildContext context, int index) {
             return Dismissible(
               key: ValueKey("$index fdsaf ${Firebase.getUser().tasks![index]}"),
@@ -49,8 +51,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   Firebase.removeEntryFromFirestore(index);
                 });
               },
-              child: SingleEntry(Firebase.getUser().tasks?[index], index,
-                  setStateOnHomescreen),
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  SingleEntry(Firebase.getUser().tasks?[index], index,
+                      setStateOnHomescreen),
+                ],
+              ),
             );
           },
         ),
