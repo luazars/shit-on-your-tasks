@@ -25,10 +25,12 @@ class MyApp extends StatelessWidget {
     final basisTheme = ThemeData.light();
     return basisTheme.copyWith(
       primaryColor: Colors.black,
-      scaffoldBackgroundColor: Colors.grey[400],
+      scaffoldBackgroundColor: Colors.grey[300],
       colorScheme: ColorScheme.fromSwatch().copyWith(
         secondary: Colors.black,
         primary: Colors.black,
+        shadow: Colors.blue[300],
+        outline: Colors.pink,
       ),
     );
   }

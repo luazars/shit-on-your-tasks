@@ -27,18 +27,13 @@ class Firebase {
   }
 
   static void postNewTaskToFirebase(String task) async {
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-
     List? testTasks = loggedInUser.tasks;
     List? tasksIsDoneList = loggedInUser.tasksIsDone;
     testTasks?.add(task);
     tasksIsDoneList?.add(false);
-
     loggedInUser.tasks = testTasks;
     loggedInUser.tasksIsDone = tasksIsDoneList;
-
     makeFirebaseChange();
-    Fluttertoast.showToast(msg: "Added succes");
   }
 
   static UserModel getUser() {
@@ -46,29 +41,21 @@ class Firebase {
   }
 
   static void removeEntryFromFirestore(int index) async {
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-
     List? tasksList = loggedInUser.tasks;
     List? tasksIsDoneList = loggedInUser.tasksIsDone;
     tasksList?.removeAt(index);
     tasksIsDoneList?.removeAt(index);
-
     loggedInUser.tasks = tasksList;
     loggedInUser.tasksIsDone = tasksIsDoneList;
-
     makeFirebaseChange();
   }
 
   static void reorderTiles(int oldIndex, int newIndex) async {
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-
     List? testTasks = loggedInUser.tasks;
     List? tasksIsDoneList = loggedInUser.tasksIsDone;
-
     if (oldIndex < newIndex) {
       newIndex -= 1;
     }
-
     RangeError.checkValidIndex(oldIndex, testTasks, 'oldIndex');
     RangeError.checkValidIndex(newIndex, testTasks, 'newIndex');
 
@@ -82,13 +69,11 @@ class Firebase {
     loggedInUser.tasksIsDone = tasksIsDoneList;
 
     makeFirebaseChange();
-    Fluttertoast.showToast(msg: "Rearrange succes");
   }
 
   static void changeTaskIsDone(bool isDone, int _index) async {
     loggedInUser.tasksIsDone![_index] = !loggedInUser.tasksIsDone![_index];
     makeFirebaseChange();
-    Fluttertoast.showToast(msg: "Removed succes");
   }
 
   static void makeFirebaseChange() async {
@@ -99,5 +84,28 @@ class Firebase {
         .set(loggedInUser.toMap())
         .onError((error, stackTrace) =>
             Fluttertoast.showToast(msg: error.toString()));
+  }
+
+  static postDetailsToFirestore(String firstName, String secondName) async {
+    final _auth = FirebaseAuth.instance;
+    User? user = _auth.currentUser;
+
+    List<String> listString = List.empty();
+    List<bool> listBool = List.empty();
+
+    UserModel userModel = UserModel();
+    userModel.email = user?.email;
+    userModel.uid = user?.uid;
+    userModel.firstName = firstName;
+    userModel.secondName = secondName;
+    userModel.tasks = listString;
+    userModel.tasksIsDone = listBool;
+
+    await FirebaseFirestore.instance
+        .collection("users")
+        .doc(user?.uid)
+        .set(userModel.toMap())
+        .onError((error, stackTrace) => print(error.toString()));
+    Fluttertoast.showToast(msg: "Account succes");
   }
 }

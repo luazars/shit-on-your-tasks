@@ -5,6 +5,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login_register/Material/user_material.dart';
 import 'package:login_register/screens/home_screen.dart';
 
+import '../Backend/firebase.dart';
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
 
@@ -265,38 +267,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (_formKey.currentState!.validate()) {
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
-          .then((value) => {postDetailsToFirestore()})
-          .catchError((e) {
+          .then((value) {
+        Firebase.postDetailsToFirestore(
+            firstNameEditingController.text, secondNameEditingController.text);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            (route) => false);
+      }).catchError((e) {
         Fluttertoast.showToast(msg: e!.message);
       });
     }
-  }
-
-  postDetailsToFirestore() async {
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    User? user = _auth.currentUser;
-
-    List<String> listString = List.empty();
-    List<bool> listBool = List.empty();
-
-    UserModel userModel = UserModel();
-    userModel.email = user?.email;
-    userModel.uid = user?.uid;
-    userModel.firstName = firstNameEditingController.text;
-    userModel.secondName = secondNameEditingController.text;
-    userModel.tasks = listString;
-    userModel.tasksIsDone = listBool;
-
-    await firebaseFirestore
-        .collection("users")
-        .doc(user?.uid)
-        .set(userModel.toMap())
-        .onError((error, stackTrace) => print(error.toString()));
-    Fluttertoast.showToast(msg: "Account succes");
-
-    Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-        (route) => false);
   }
 }
