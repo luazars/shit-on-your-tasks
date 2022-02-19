@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../Material/user_material.dart';
+import '../models/user_material.dart';
 import '../screens/login_screen.dart';
 
 class Firebase {
@@ -105,7 +105,7 @@ class Firebase {
         .collection("users")
         .doc(user?.uid)
         .set(userModel.toMap())
-        .onError((error, stackTrace) => print(error.toString()));
-    Fluttertoast.showToast(msg: "Account succes");
+        .onError((error, stackTrace) =>
+            Fluttertoast.showToast(msg: error.toString()));
   }
 }

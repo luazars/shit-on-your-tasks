@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
         primary: Colors.black,
         shadow: Colors.blue[300],
         outline: Colors.pink,
+        errorContainer: Colors.black,
       ),
     );
   }

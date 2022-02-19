@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
-import 'package:login_register/Backend/firebase.dart';
 import 'package:login_register/screens/home_screen.dart';
+
+import '../services/firebase.dart';
 
 class SingleEntry extends StatelessWidget {
   final String _title;

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:login_register/Backend/firebase.dart';
 
-import 'home_screen.dart';
+import '../services/firebase.dart';
 
 class AddTaskScreen extends StatefulWidget {
   final Function setStateMain;
@@ -71,7 +70,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text("Add you task")),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -86,7 +85,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   addTask(String task) {
     Firebase.postNewTaskToFirebase(task);
-    Fluttertoast.showToast(msg: task);
     Navigator.pop(context);
     widget.setStateMain();
   }

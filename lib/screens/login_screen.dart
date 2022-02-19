@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login_register/screens/home_screen.dart';
 import 'package:login_register/screens/register_screen.dart';
+import 'package:login_register/shared/button.dart';
+import 'package:login_register/shared/loading_bar.dart';
+import 'package:progress_state_button/progress_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -19,12 +22,17 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
+  //loading
+  bool loading = false;
+  ButtonState stateLoginButton = ButtonState.idle;
+
   @override
   Widget build(BuildContext context) {
     final _auth = FirebaseAuth.instance;
 
     void signIn(String email, String password) async {
       if (_formKey.currentState!.validate()) {
+        setState(() => loading = true);
         try {
           await _auth
               .signInWithEmailAndPassword(email: email, password: password)
@@ -35,29 +43,20 @@ class _LoginScreenState extends State<LoginScreen> {
                   });
         } on FirebaseAuthException catch (error) {
           Fluttertoast.showToast(msg: error.code);
+          setState(() => loading = false);
         }
+      } else {
+        setState(() => loading = false);
       }
     }
 
-    final loginButton = Material(
-      elevation: 5,
-      borderRadius: BorderRadius.circular(10),
-      child: MaterialButton(
-        padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-        minWidth: MediaQuery.of(context).size.width,
-        onPressed: () {
-          signIn(emailController.text, passwordController.text);
-        },
-        child: const Text(
-          "Login",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
+    final loginButton = BasicButton("Login", () {
+      signIn(emailController.text, passwordController.text);
+    }, false);
+
+    final loadingButton = BasicButton("", () {
+      Fluttertoast.showToast(msg: "Please stay patient");
+    }, true);
 
     final signUpText = Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -158,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 65),
                   emailTextField,
                   passwordTextField,
-                  loginButton,
+                  loading ? loadingButton : loginButton,
                   const SizedBox(height: 25),
                   signUpText,
                 ],
