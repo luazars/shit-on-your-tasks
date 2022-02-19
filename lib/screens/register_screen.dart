@@ -46,10 +46,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
             if (value!.isEmpty) {
               return ("Please enter your first name");
             }
-            if (value.toString().length < 3) {
+            if (value.length < 3) {
               return ("Your name is to short");
             }
-            if (value.length > 30) {
+            if (value.length > 10) {
               return ("Your name is to long)");
             }
             return null;
@@ -158,7 +158,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               return ("Your password is to short (min. 8)");
             }
             if (value.length > 30) {
-              return ("Your password is to short");
+              return ("Your password is to long");
             }
             return null;
           },
@@ -229,11 +229,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  const SizedBox(height: 65),
-                  const Image(image: AssetImage("assets/to-do-list.png")),
                   firstNameTextField,
                   secondNameTextField,
                   emailTextField,

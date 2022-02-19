@@ -146,7 +146,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset("assets/to-do-list.jpg"),
                   const SizedBox(height: 65),
                   emailTextField,
                   passwordTextField,
