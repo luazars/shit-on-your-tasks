@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:login_register/screens/add_task_screen.dart';
-
+import 'package:login_register/shared/bg_widget.dart';
 import '../models/single_entry_material.dart';
 import '../services/firebase.dart';
 
@@ -22,7 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Background(
+      Scaffold(
         appBar: AppBar(
           title: Text(
               "Welcome back ${Firebase.getUser().firstName} ${Firebase.getUser().secondName}"),
@@ -81,6 +83,8 @@ class _HomeScreenState extends State<HomeScreen> {
           child: const Icon(
             Icons.add_rounded,
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

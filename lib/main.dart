@@ -22,13 +22,25 @@ class MyApp extends StatelessWidget {
   }
 
   ThemeData baisTheme() {
-    final basisTheme = ThemeData.light();
+    final basisTheme = ThemeData.dark();
     return basisTheme.copyWith(
-      primaryColor: Colors.black,
-      scaffoldBackgroundColor: Colors.grey[300],
+      scaffoldBackgroundColor: Colors.transparent,
+      splashColor: Colors.red,
+      cardColor: Colors.grey[900],
+      canvasColor: Colors.grey[900],
+      iconTheme: const IconThemeData(
+        color: Colors.white,
+      ),
+      inputDecorationTheme: const InputDecorationTheme(
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.transparent),
+        ),
+      ),
       colorScheme: ColorScheme.fromSwatch().copyWith(
-        secondary: Colors.black,
-        primary: Colors.black,
+        secondary: Colors.orange,
+        primary: Colors.red,
+        outline: Colors.white,
+        onBackground: Colors.blue,
       ),
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login_register/screens/home_screen.dart';
 import 'package:login_register/screens/register_screen.dart';
+import 'package:login_register/shared/bg_widget.dart';
 import 'package:login_register/shared/button.dart';
 import 'package:progress_state_button/progress_button.dart';
 
@@ -135,24 +136,26 @@ class _LoginScreenState extends State<LoginScreen> {
       ],
     );
 
-    return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 65),
-                  emailTextField,
-                  passwordTextField,
-                  loading ? loadingButton : loginButton,
-                  const SizedBox(height: 25),
-                  signUpText,
-                ],
+    return Background(
+      Scaffold(
+        body: Center(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 65),
+                    emailTextField,
+                    passwordTextField,
+                    loading ? loadingButton : loginButton,
+                    const SizedBox(height: 25),
+                    signUpText,
+                  ],
+                ),
               ),
             ),
           ),
