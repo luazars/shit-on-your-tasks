@@ -1,5 +1,4 @@
 import "package:flutter/material.dart";
-import 'package:login_register/screens/home_screen.dart';
 
 import '../services/firebase.dart';
 
@@ -13,7 +12,6 @@ class SingleEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _formKey = GlobalKey<FormState>();
     return Container(
       child: ListTile(
         hoverColor: Colors.red,

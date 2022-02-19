@@ -1,8 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login_register/screens/home_screen.dart';
+import 'package:login_register/shared/button.dart';
 
 import '../services/firebase.dart';
 
@@ -23,27 +23,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final passwordController = TextEditingController();
   final confirmController = TextEditingController();
 
+  bool loading = false;
+
   @override
   Widget build(BuildContext context) {
-    final signUpButton = Material(
-      elevation: 5,
-      borderRadius: BorderRadius.circular(10),
-      child: MaterialButton(
-        padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-        minWidth: MediaQuery.of(context).size.width,
-        onPressed: () {
-          signUp(emailEditingController.text, passwordController.text);
-        },
-        child: const Text(
-          "SignUp",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
+    final signUpButton = BasicButton(
+        "SignUp",
+        () => signUp(emailEditingController.text, passwordController.text),
+        false);
+
+    final loadingButton = BasicButton("", () {
+      Fluttertoast.showToast(msg: "Please stay patient");
+    }, true);
 
     final firstNameTextField = Column(
       children: [
@@ -238,21 +229,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Form(
               key: _formKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Image.network(
-                    "https://www.pngkit.com/png/full/310-3107626_dog-pooping-silhouette-at-getdrawings-information.png",
-                    height: 200,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
                   const SizedBox(height: 65),
+                  const Image(image: AssetImage("assets/to-do-list.png")),
                   firstNameTextField,
                   secondNameTextField,
                   emailTextField,
                   passwordTextField,
                   confirmTextField,
-                  signUpButton,
+                  loading ? loadingButton : signUpButton,
                 ],
               ),
             ),
@@ -264,6 +251,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   void signUp(String email, String password) async {
     if (_formKey.currentState!.validate()) {
+      setState(() => loading = true);
+
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) {
@@ -275,6 +264,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             (route) => false);
       }).catchError((e) {
         Fluttertoast.showToast(msg: e!.message);
+        setState(() {
+          loading = false;
+        });
       });
     }
   }

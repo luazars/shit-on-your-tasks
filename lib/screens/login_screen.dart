@@ -4,7 +4,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login_register/screens/home_screen.dart';
 import 'package:login_register/screens/register_screen.dart';
 import 'package:login_register/shared/button.dart';
-import 'package:login_register/shared/loading_bar.dart';
 import 'package:progress_state_button/progress_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -45,8 +44,6 @@ class _LoginScreenState extends State<LoginScreen> {
           Fluttertoast.showToast(msg: error.code);
           setState(() => loading = false);
         }
-      } else {
-        setState(() => loading = false);
       }
     }
 
@@ -148,12 +145,8 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Image.network(
-                    "https://www.pngkit.com/png/full/310-3107626_dog-pooping-silhouette-at-getdrawings-information.png",
-                    height: 200,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
+                children: [
+                  Image.asset("assets/to-do-list.jpg"),
                   const SizedBox(height: 65),
                   emailTextField,
                   passwordTextField,
