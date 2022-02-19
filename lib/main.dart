@@ -28,8 +28,7 @@ class MyApp extends StatelessWidget {
       scaffoldBackgroundColor: Colors.grey[300],
       colorScheme: ColorScheme.fromSwatch().copyWith(
         secondary: Colors.black,
-        primary: Colors.white,
-        errorContainer: Colors.black,
+        primary: Colors.black,
       ),
     );
   }

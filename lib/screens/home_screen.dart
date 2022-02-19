@@ -23,66 +23,53 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Column(
-          children: [
-            Container(
-              height: 75,
-              decoration: const BoxDecoration(
-                color: Colors.black,
-                boxShadow: [BoxShadow(blurRadius: 40.0)],
-                borderRadius:
-                    BorderRadius.vertical(bottom: Radius.circular(20)),
+        appBar: AppBar(
+          title: Text(
+              "Welcome back ${Firebase.getUser().firstName} ${Firebase.getUser().secondName}"),
+          actions: [
+            IconButton(
+                icon: const Icon(Icons.logout_rounded),
+                onPressed: () {
+                  Firebase.logout(context);
+                }),
+          ],
+        ),
+        body: ReorderableListView.builder(
+          onReorder: ((oldIndex, newIndex) =>
+              Firebase.reorderTiles(oldIndex, newIndex)),
+          itemCount: Firebase.getUser().tasks?.length ?? 0,
+          primary: true,
+          padding: const EdgeInsets.all(10),
+          itemBuilder: (BuildContext context, int index) {
+            return Dismissible(
+              key: ValueKey(
+                index.toString() + Firebase.getUser().tasks?[index],
               ),
-              child: Row(
+              onDismissed: (value) {
+                setState(() {
+                  Firebase.removeEntryFromFirestore(index);
+                });
+              },
+              background: Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: const [
+                    Icon(
+                      Icons.delete_rounded,
+                    ),
+                  ],
+                ),
+              ),
+              child: Column(
                 children: [
-                  Text(
-                      "Welcome back ${Firebase.getUser().firstName} ${Firebase.getUser().secondName}"),
-                  IconButton(
-                      icon: const Icon(Icons.logout_rounded),
-                      onPressed: () {
-                        Firebase.logout(context);
-                      }),
+                  const SizedBox(height: 10),
+                  SingleEntry(Firebase.getUser().tasks?[index], index,
+                      setStateOnHomescreen),
                 ],
               ),
-            ),
-            ReorderableListView.builder(
-              onReorder: ((oldIndex, newIndex) =>
-                  Firebase.reorderTiles(oldIndex, newIndex)),
-              itemCount: Firebase.getUser().tasks?.length ?? 0,
-              primary: true,
-              padding: const EdgeInsets.all(10),
-              itemBuilder: (BuildContext context, int index) {
-                return Dismissible(
-                  key: ValueKey(
-                    index.toString() + Firebase.getUser().tasks?[index],
-                  ),
-                  onDismissed: (value) {
-                    setState(() {
-                      Firebase.removeEntryFromFirestore(index);
-                    });
-                  },
-                  background: Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: const [
-                        Icon(
-                          Icons.delete_rounded,
-                        ),
-                      ],
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 10),
-                      SingleEntry(Firebase.getUser().tasks?[index], index,
-                          setStateOnHomescreen),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ],
+            );
+          },
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: (() {
@@ -91,7 +78,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   builder: ((context) => AddTaskScreen(setStateOnHomescreen))));
             });
           }),
-          child: const Icon(Icons.add_rounded),
+          child: const Icon(
+            Icons.add_rounded,
+          ),
         ));
   }
 }
