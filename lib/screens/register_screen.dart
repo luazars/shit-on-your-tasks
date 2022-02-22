@@ -257,7 +257,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) {
-        Firebase.postDetailsToFirestore(
+        Firebase.registerNewUser(
             firstNameEditingController.text, secondNameEditingController.text);
         Navigator.pushAndRemoveUntil(
             context,
