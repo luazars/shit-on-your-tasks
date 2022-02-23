@@ -7,14 +7,14 @@ import '../screens/login_screen.dart';
 
 class Firebase {
   //User stuff in Firebase
-  static UserModel loggedInUser = UserModel();
+  static UserModel _loggedInUser = UserModel();
 
-  static UserModel getUser() {
-    return loggedInUser;
+  static UserModel get loggedInUser {
+    return _loggedInUser;
   }
 
-  static Future<void> logout(BuildContext context) async {
-    await FirebaseAuth.instance.signOut();
+  static Future<void> logout(BuildContext context, FirebaseAuth _auth) async {
+    await _auth.signOut();
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) => const LoginScreen(),
@@ -22,8 +22,8 @@ class Firebase {
         (route) => false);
   }
 
-  static registerNewUser(String firstName, String secondName) async {
-    final _auth = FirebaseAuth.instance;
+  static registerNewUser(String firstName, String secondName,
+      FirebaseAuth _auth, FirebaseFirestore firebaseFirestore) async {
     User? user = _auth.currentUser;
 
     List<String> listString = List.empty();
@@ -37,7 +37,7 @@ class Firebase {
     userModel.tasks = listString;
     userModel.tasksIsDone = listBool;
 
-    await FirebaseFirestore.instance
+    await firebaseFirestore
         .collection("users")
         .doc(user?.uid)
         .set(userModel.toMap())
@@ -47,29 +47,32 @@ class Firebase {
 
   //Task stuff in
 
-  static void postNewTaskToFirebase(String task) async {
-    List? testTasks = loggedInUser.tasks;
-    List? tasksIsDoneList = loggedInUser.tasksIsDone;
+  static void postNewTaskToFirebase(
+      String task, FirebaseFirestore firebaseFirestore) async {
+    List? testTasks = _loggedInUser.tasks;
+    List? tasksIsDoneList = _loggedInUser.tasksIsDone;
     testTasks?.add(task);
     tasksIsDoneList?.add(false);
-    loggedInUser.tasks = testTasks;
-    loggedInUser.tasksIsDone = tasksIsDoneList;
-    postChangeToFirebase();
+    _loggedInUser.tasks = testTasks;
+    _loggedInUser.tasksIsDone = tasksIsDoneList;
+    postChangeToFirebase(firebaseFirestore);
   }
 
-  static void removeEntryFromFirestore(int index) async {
-    List? tasksList = loggedInUser.tasks;
-    List? tasksIsDoneList = loggedInUser.tasksIsDone;
+  static void removeEntryFromFirestore(
+      int index, FirebaseFirestore firebaseFirestore) async {
+    List? tasksList = _loggedInUser.tasks;
+    List? tasksIsDoneList = _loggedInUser.tasksIsDone;
     tasksList?.removeAt(index);
     tasksIsDoneList?.removeAt(index);
-    loggedInUser.tasks = tasksList;
-    loggedInUser.tasksIsDone = tasksIsDoneList;
-    postChangeToFirebase();
+    _loggedInUser.tasks = tasksList;
+    _loggedInUser.tasksIsDone = tasksIsDoneList;
+    postChangeToFirebase(firebaseFirestore);
   }
 
-  static void reorderTiles(int oldIndex, int newIndex) async {
-    List? testTasks = loggedInUser.tasks;
-    List? tasksIsDoneList = loggedInUser.tasksIsDone;
+  static void reorderTiles(
+      int oldIndex, int newIndex, FirebaseFirestore firebaseFirestore) async {
+    List? testTasks = _loggedInUser.tasks;
+    List? tasksIsDoneList = _loggedInUser.tasksIsDone;
     if (oldIndex < newIndex) {
       newIndex -= 1;
     }
@@ -82,34 +85,35 @@ class Firebase {
     final bool value = tasksIsDoneList!.removeAt(oldIndex);
     tasksIsDoneList.insert(newIndex, value);
 
-    loggedInUser.tasks = testTasks;
-    loggedInUser.tasksIsDone = tasksIsDoneList;
+    _loggedInUser.tasks = testTasks;
+    _loggedInUser.tasksIsDone = tasksIsDoneList;
 
-    postChangeToFirebase();
+    postChangeToFirebase(firebaseFirestore);
   }
 
-  static void changeTaskIsDone(bool isDone, int _index) async {
-    loggedInUser.tasksIsDone![_index] = !loggedInUser.tasksIsDone![_index];
-    postChangeToFirebase();
+  static void changeTaskIsDone(
+      bool isDone, int _index, FirebaseFirestore firebaseFirestore) async {
+    _loggedInUser.tasksIsDone![_index] = !_loggedInUser.tasksIsDone![_index];
+    postChangeToFirebase(firebaseFirestore);
   }
 
   //syncronize
-  static void postChangeToFirebase() async {
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  static void postChangeToFirebase(FirebaseFirestore firebaseFirestore) async {
     await firebaseFirestore
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser?.uid)
-        .set(loggedInUser.toMap())
+        .set(_loggedInUser.toMap())
         .onError((error, stackTrace) =>
             Fluttertoast.showToast(msg: error.toString()));
   }
 
-  static Future<void> getChangeOnFirebase(Function setState) async {
-    await FirebaseFirestore.instance
+  static Future<void> getChangeOnFirebase(
+      Function setState, FirebaseFirestore firebaseFirestore) async {
+    await firebaseFirestore
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser?.uid)
         .get()
-        .then((value) => loggedInUser = UserModel.fromMap(value.data()));
+        .then((value) => _loggedInUser = UserModel.fromMap(value.data()));
     setState();
   }
 }

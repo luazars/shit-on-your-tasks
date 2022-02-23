@@ -1,10 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../services/firebase.dart';
 
 class AddTaskScreen extends StatefulWidget {
   final Function setStateMain;
-  const AddTaskScreen(this.setStateMain, {Key? key}) : super(key: key);
+  final FirebaseFirestore firebaseFirestore;
+  const AddTaskScreen(this.setStateMain, this.firebaseFirestore, {Key? key})
+      : super(key: key);
 
   @override
   _AddTaskScreenState createState() => _AddTaskScreenState();
@@ -83,7 +86,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   }
 
   addTask(String task) {
-    Firebase.postNewTaskToFirebase(task);
+    Firebase.postNewTaskToFirebase(task, widget.firebaseFirestore);
     Navigator.pop(context);
     widget.setStateMain();
   }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -17,6 +18,7 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
   final firstNameEditingController = TextEditingController();
   final secondNameEditingController = TextEditingController();
@@ -257,8 +259,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       await _auth
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((value) {
-        Firebase.registerNewUser(
-            firstNameEditingController.text, secondNameEditingController.text);
+        Firebase.registerNewUser(firstNameEditingController.text,
+            secondNameEditingController.text, _auth, _firebaseFirestore);
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const HomeScreen()),

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:flutter/material.dart";
 
 import '../services/firebase.dart';
@@ -6,8 +7,11 @@ class SingleEntry extends StatelessWidget {
   final String _title;
   final int _index;
   final Function setState;
+  final FirebaseFirestore firebaseFirestore;
 
-  const SingleEntry(this._title, this._index, this.setState, {Key? key})
+  const SingleEntry(
+      this._title, this._index, this.setState, this.firebaseFirestore,
+      {Key? key})
       : super(key: key);
 
   @override
@@ -18,7 +22,7 @@ class SingleEntry extends StatelessWidget {
         leading: Checkbox(
           value: Firebase.loggedInUser.tasksIsDone![_index],
           onChanged: (value) {
-            Firebase.changeTaskIsDone(value!, _index);
+            Firebase.changeTaskIsDone(value!, _index, firebaseFirestore);
             setState();
           },
         ),
