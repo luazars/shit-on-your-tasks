@@ -1,18 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import "package:flutter/material.dart";
-
-import '../services/firebase.dart';
+import 'package:login_register/models/task_model.dart';
 
 class SingleEntry extends StatelessWidget {
-  final String _title;
-  final int _index;
+  final Task _task;
   final Function setState;
-  final FirebaseFirestore firebaseFirestore;
 
-  const SingleEntry(
-      this._title, this._index, this.setState, this.firebaseFirestore,
-      {Key? key})
-      : super(key: key);
+  const SingleEntry(this._task, this.setState, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,17 +13,17 @@ class SingleEntry extends StatelessWidget {
       child: ListTile(
         hoverColor: Colors.red,
         leading: Checkbox(
-          value: Firebase.loggedInUser.tasksIsDone![_index],
+          value: _task.isDone,
           onChanged: (value) {
-            Firebase.changeTaskIsDone(value!, _index, firebaseFirestore);
+            _task.isDone = !_task.isDone;
             setState();
           },
         ),
-        title: Text(_title),
+        title: Text(_task.title),
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: Theme.of(context).cardColor,
+        color: _task.color,
       ),
     );
   }

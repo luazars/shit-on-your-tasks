@@ -22,24 +22,26 @@ class Firebase {
         (route) => false);
   }
 
-  static registerNewUser(String firstName, String secondName,
-      FirebaseAuth _auth, FirebaseFirestore firebaseFirestore) async {
-    User? user = _auth.currentUser;
+  static registerNewUser(String _firstName, String _secondName,
+      FirebaseAuth _auth, FirebaseFirestore _firebaseFirestore) async {
+    User? _user = _auth.currentUser;
 
-    List<String> listString = List.empty();
-    List<bool> listBool = List.empty();
+    List<String> _emptyStringList = List.empty();
+    List<bool> _emptyBoolList = List.empty();
 
     UserModel userModel = UserModel();
-    userModel.email = user?.email;
-    userModel.uid = user?.uid;
-    userModel.firstName = firstName;
-    userModel.secondName = secondName;
-    userModel.tasks = listString;
-    userModel.tasksIsDone = listBool;
+    userModel.email = _user?.email;
+    userModel.uid = _user?.uid;
+    userModel.firstName = _firstName;
+    userModel.secondName = _secondName;
+    userModel.tasksTitle = _emptyStringList;
+    userModel.tasksText = _emptyStringList;
+    userModel.tasksColor = _emptyStringList;
+    userModel.tasksIsDone = _emptyBoolList;
 
-    await firebaseFirestore
+    await _firebaseFirestore
         .collection("users")
-        .doc(user?.uid)
+        .doc(_user?.uid)
         .set(userModel.toMap())
         .onError((error, stackTrace) =>
             Fluttertoast.showToast(msg: error.toString()));
@@ -47,46 +49,54 @@ class Firebase {
 
   //Task stuff in
 
-  static void postNewTaskToFirebase(
-      String task, FirebaseFirestore firebaseFirestore) async {
-    List? testTasks = _loggedInUser.tasks;
+  static void postNewTaskToFirebase(String _taskTitle, String _taskText,
+      String _taskColor, FirebaseFirestore _firebaseFirestore) async {
+    List? testTasks = _loggedInUser.tasksTitle;
     List? tasksIsDoneList = _loggedInUser.tasksIsDone;
-    testTasks?.add(task);
+    testTasks?.add(_taskTitle);
     tasksIsDoneList?.add(false);
-    _loggedInUser.tasks = testTasks;
+    _loggedInUser.tasksTitle = testTasks;
     _loggedInUser.tasksIsDone = tasksIsDoneList;
-    postChangeToFirebase(firebaseFirestore);
+    postChangeToFirebase(_firebaseFirestore);
   }
 
   static void removeEntryFromFirestore(
       int index, FirebaseFirestore firebaseFirestore) async {
-    List? tasksList = _loggedInUser.tasks;
-    List? tasksIsDoneList = _loggedInUser.tasksIsDone;
-    tasksList?.removeAt(index);
-    tasksIsDoneList?.removeAt(index);
-    _loggedInUser.tasks = tasksList;
-    _loggedInUser.tasksIsDone = tasksIsDoneList;
+    List? _tasksTitleList = _loggedInUser.tasksTitle;
+    List? _tasksTextList = _loggedInUser.tasksText;
+    List? _tasksColorList = _loggedInUser.tasksColor;
+    List? _tasksIsDoneList = _loggedInUser.tasksIsDone;
+    _tasksTitleList?.removeAt(index);
+    _tasksTextList?.removeAt(index);
+    _tasksColorList?.removeAt(index);
+    _tasksIsDoneList?.removeAt(index);
+    _loggedInUser.tasksTitle = _tasksTitleList;
+    _loggedInUser.tasksText = _tasksTextList;
+    _loggedInUser.tasksColor = _tasksColorList;
+    _loggedInUser.tasksIsDone = _tasksIsDoneList;
     postChangeToFirebase(firebaseFirestore);
   }
 
   static void reorderTiles(
       int oldIndex, int newIndex, FirebaseFirestore firebaseFirestore) async {
-    List? testTasks = _loggedInUser.tasks;
-    List? tasksIsDoneList = _loggedInUser.tasksIsDone;
+    List? _tasksTitleList = _loggedInUser.tasksTitle;
+    List? _tasksTextList = _loggedInUser.tasksText;
+    List? _tasksColorList = _loggedInUser.tasksColor;
+    List? _tasksIsDoneList = _loggedInUser.tasksIsDone;
     if (oldIndex < newIndex) {
       newIndex -= 1;
     }
-    RangeError.checkValidIndex(oldIndex, testTasks, 'oldIndex');
-    RangeError.checkValidIndex(newIndex, testTasks, 'newIndex');
+    RangeError.checkValidIndex(oldIndex, _tasksTitleList, 'oldIndex');
+    RangeError.checkValidIndex(newIndex, _tasksTitleList, 'newIndex');
 
-    final String item = testTasks!.removeAt(oldIndex);
-    testTasks.insert(newIndex, item);
+    final String item = _tasksTitleList!.removeAt(oldIndex);
+    _tasksTitleList.insert(newIndex, item);
 
-    final bool value = tasksIsDoneList!.removeAt(oldIndex);
-    tasksIsDoneList.insert(newIndex, value);
+    final bool value = _tasksIsDoneList!.removeAt(oldIndex);
+    _tasksIsDoneList.insert(newIndex, value);
 
-    _loggedInUser.tasks = testTasks;
-    _loggedInUser.tasksIsDone = tasksIsDoneList;
+    _loggedInUser.tasksTitle = _tasksTitleList;
+    _loggedInUser.tasksIsDone = _tasksIsDoneList;
 
     postChangeToFirebase(firebaseFirestore);
   }

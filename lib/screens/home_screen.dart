@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:login_register/screens/add_task_screen.dart';
 import 'package:login_register/shared/bg_widget.dart';
 import '../models/single_entry_material.dart';
+import '../models/task_model.dart';
 import '../services/firebase.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -16,13 +16,13 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   setStateOnHomescreen() => setState(() {});
-  final _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
+
+  List<Task> tasks = List.empty(growable: true);
 
   @override
   void initState() {
     super.initState();
-    Firebase.getChangeOnFirebase(setStateOnHomescreen, _firebaseFirestore);
+    //Firebase.getChangeOnFirebase(setStateOnHomescreen);
   }
 
   @override
@@ -30,30 +30,29 @@ class _HomeScreenState extends State<HomeScreen> {
     return Background(
       Scaffold(
         appBar: AppBar(
-          title: Text(
-              "Welcome back ${Firebase.loggedInUser.firstName} ${Firebase.loggedInUser.secondName}"),
+          title: Text("Welcome back"),
           actions: [
             IconButton(
                 icon: const Icon(Icons.logout_rounded),
                 onPressed: () {
-                  Firebase.logout(context, _auth);
+                  //Firebase.logout(context);
                 }),
           ],
         ),
         body: ReorderableListView.builder(
           onReorder: ((oldIndex, newIndex) =>
-              Firebase.reorderTiles(oldIndex, newIndex, _firebaseFirestore)),
-          itemCount: Firebase.loggedInUser.tasks?.length ?? 0,
-          primary: true,
+              Task.reorder(tasks, oldIndex, newIndex)),
+          itemCount: tasks.length,
           padding: const EdgeInsets.all(10),
           itemBuilder: (BuildContext context, int index) {
             return Dismissible(
-              key: ValueKey(
-                index.toString() + Firebase.loggedInUser.tasks?[index],
-              ),
+              key: ValueKey(tasks[index].title +
+                  tasks.length.toString() +
+                  index.toString()),
               onDismissed: (value) {
                 setState(() {
-                  Firebase.removeEntryFromFirestore(index, _firebaseFirestore);
+                  tasks.removeAt(index);
+                  print(Timestamp.now());
                 });
               },
               background: Padding(
@@ -70,8 +69,10 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 10),
-                  SingleEntry(Firebase.loggedInUser.tasks?[index], index,
-                      setStateOnHomescreen, _firebaseFirestore),
+                  SingleEntry(
+                    tasks[index],
+                    setStateOnHomescreen,
+                  ),
                 ],
               ),
             );
@@ -81,8 +82,8 @@ class _HomeScreenState extends State<HomeScreen> {
           onPressed: (() {
             setState(() {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: ((context) => AddTaskScreen(
-                      setStateOnHomescreen, _firebaseFirestore))));
+                  builder: ((context) =>
+                      AddTaskScreen(setStateOnHomescreen, tasks))));
             });
           }),
           child: const Icon(

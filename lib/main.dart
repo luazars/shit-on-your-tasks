@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:login_register/screens/login_screen.dart';
+import 'package:login_register/screens/home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "login",
       theme: baisTheme(),
-      home: const LoginScreen(),
+      home: const HomeScreen(),
     );
   }
 
