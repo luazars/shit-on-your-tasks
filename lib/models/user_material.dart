@@ -3,20 +3,10 @@ class UserModel {
   String? email;
   String? firstName;
   String? secondName;
-  List? tasksTitle;
-  List? tasksText;
-  List? tasksColor;
-  List? tasksIsDone;
+  List<Map<String, dynamic>>? tasks;
 
   UserModel(
-      {this.uid,
-      this.email,
-      this.firstName,
-      this.secondName,
-      this.tasksTitle,
-      this.tasksText,
-      this.tasksColor,
-      this.tasksIsDone});
+      {this.uid, this.email, this.firstName, this.secondName, this.tasks});
 
   factory UserModel.fromMap(map) {
     return UserModel(
@@ -24,10 +14,7 @@ class UserModel {
         email: map['email'],
         firstName: map['first name'],
         secondName: map['second name'],
-        tasksTitle: map['tasksTitle'],
-        tasksText: map['tasksText'],
-        tasksColor: map['tasksColor'],
-        tasksIsDone: map['tasksIsDone']);
+        tasks: map['tasks']);
   }
 
   Map<String, dynamic> toMap() {
@@ -36,10 +23,7 @@ class UserModel {
       'email': email,
       'first name': firstName,
       'second name': secondName,
-      'tasksTitle': tasksTitle,
-      'tasksText': tasksText,
-      'tasksColor': tasksColor,
-      'tasksIsDone': tasksIsDone
+      'tasksTitle': tasks
     };
   }
 }

@@ -7,6 +7,8 @@ import 'package:login_register/shared/bg_widget.dart';
 import 'package:login_register/shared/button.dart';
 import 'package:progress_state_button/progress_button.dart';
 
+import '../services/firebase.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -36,11 +38,10 @@ class _LoginScreenState extends State<LoginScreen> {
         try {
           await _auth
               .signInWithEmailAndPassword(email: email, password: password)
-              .then((uid) => {
-                    Fluttertoast.showToast(msg: "Login Successful"),
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const HomeScreen())),
-                  });
+              .then((uid) {
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const HomeScreen()));
+          });
         } on FirebaseAuthException catch (error) {
           Fluttertoast.showToast(msg: error.code);
           setState(() => loading = false);

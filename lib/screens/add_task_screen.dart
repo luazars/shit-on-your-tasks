@@ -26,7 +26,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () {
-          addTask(taskTitleController.text);
+          addTask(taskTitleController.text, taskTextController.text);
         },
         child: const Text(
           "Add Task",
@@ -111,15 +111,16 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     );
   }
 
-  addTask(String taskTitle) {
+  addTask(String taskTitle, String taskText) {
     //Firebase.postNewTaskToFirebase(task, widget.firebaseFirestore);
     if (_formKey.currentState!.validate()) {
       widget.tasks.add(Task(
           taskTitle,
-          taskTitle,
+          taskText,
           false,
-          Color.fromARGB(250, Random().nextInt(100) + 150, Random().nextInt(50),
-              Random().nextInt(50))));
+          Color.fromARGB(250, Random().nextInt(100) + 150,
+              Random().nextInt(100), Random().nextInt(100)),
+          widget.tasks.length));
       Navigator.pop(context);
       widget.setStateMain();
     }

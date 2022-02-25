@@ -1,11 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login_register/screens/add_task_screen.dart';
 import 'package:login_register/shared/bg_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/single_entry_material.dart';
 import '../models/task_model.dart';
 import '../services/firebase.dart';
+import 'dart:convert';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -22,7 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    //Firebase.getChangeOnFirebase(setStateOnHomescreen);
+
+    getDataFirebase();
   }
 
   @override
@@ -32,6 +34,16 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           title: Text("Welcome back"),
           actions: [
+            IconButton(
+                icon: const Icon(Icons.get_app_rounded),
+                onPressed: () {
+                  getPref();
+                }),
+            IconButton(
+                icon: const Icon(Icons.sync_rounded),
+                onPressed: () {
+                  savePref();
+                }),
             IconButton(
                 icon: const Icon(Icons.logout_rounded),
                 onPressed: () {
@@ -52,7 +64,6 @@ class _HomeScreenState extends State<HomeScreen> {
               onDismissed: (value) {
                 setState(() {
                   tasks.removeAt(index);
-                  print(Timestamp.now());
                 });
               },
               background: Padding(
@@ -92,5 +103,40 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> syncFirebase() async {
+    await Firebase.clearTasksOnFirebase();
+    for (var i = 0; i < tasks.length; i++) {
+      Firebase.pushFirebase(tasks[i]);
+    }
+  }
+
+  Future<void> getDataFirebase() async {
+    tasks = (await Firebase.pullFirebase())!;
+    tasks.sort((a, b) => a.index.compareTo(b.index));
+    setState(() {});
+  }
+
+  savePref() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    for (var i = 0; i < tasks.length; i++) {
+      prefs.setString("task $i", jsonEncode(tasks[i]));
+    }
+
+    Fluttertoast.showToast(msg: "send");
+  }
+
+  getPref() async {
+    final prefs = await SharedPreferences.getInstance();
+    int a = 0;
+    Task task;
+    do {
+      task = jsonDecode(prefs.getString("task$a")!);
+      tasks.add(task);
+      a++;
+    } while (task != null);
+    Fluttertoast.showToast(msg: "da");
   }
 }

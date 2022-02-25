@@ -3,6 +3,7 @@ import "package:flutter/services.dart";
 
 class AddItemDialog extends StatefulWidget {
   final void Function(String txt) addItem;
+  // ignore: use_key_in_widget_constructors
   const AddItemDialog(this.addItem);
 
   @override
