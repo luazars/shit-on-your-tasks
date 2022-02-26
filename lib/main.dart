@@ -1,6 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:login_register/screens/home_screen.dart';
 import 'package:login_register/screens/login_screen.dart';
 
 Future<void> main() async {
@@ -23,8 +22,8 @@ class MyApp extends StatelessWidget {
   }
 
   ThemeData baisTheme() {
-    final basisTheme = ThemeData.dark();
-    return basisTheme.copyWith(
+    final baisTheme = ThemeData.dark();
+    return baisTheme.copyWith(
       scaffoldBackgroundColor: Colors.transparent,
       splashColor: Colors.red,
       cardColor: Colors.grey[900],

@@ -9,7 +9,7 @@ import '../models/user_material.dart';
 import '../screens/login_screen.dart';
 
 class Firebase {
-  //User stuff in Firebase
+  //*logged in User
   static UserModel _loggedInUser = UserModel();
 
   static UserModel get loggedInUser {
@@ -18,6 +18,7 @@ class Firebase {
 
   static final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
+  //*User Login and Registration
   static Future<void> logout(BuildContext context, FirebaseAuth _auth) async {
     await _auth.signOut();
     Navigator.of(context).pushAndRemoveUntil(
@@ -45,6 +46,7 @@ class Firebase {
             Fluttertoast.showToast(msg: error.toString()));
   }
 
+  //*Task handling Methods
   static Future<void> clearTasksOnFirebase() async {
     var collection = firebaseFirestore
         .collection("users")
@@ -56,8 +58,7 @@ class Firebase {
     }
   }
 
-  //syncronize
-  static void pushFirebase(Task task) async {
+  static void pushToFirebase(Task task) async {
     await firebaseFirestore
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser?.uid)
@@ -68,14 +69,16 @@ class Firebase {
             Fluttertoast.showToast(msg: error.toString()));
   }
 
-  static Future<List<Task>?> pullFirebase() async {
+  static Future<List<Task>?> pullFromFirebase() async {
     List<Task>? tasksData = List.empty(growable: true);
+    //*User Data
     await firebaseFirestore
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser?.uid)
         .get()
         .then((value) => _loggedInUser = UserModel.fromMap(value.data()));
 
+    //*Tasks
     await firebaseFirestore
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser?.uid)

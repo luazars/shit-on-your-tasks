@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 
+//!Not used, maby later as a quick-Task-Adder
+
 class AddItemDialog extends StatefulWidget {
   final void Function(String txt) addItem;
   // ignore: use_key_in_widget_constructors

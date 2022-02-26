@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:login_register/models/colors_material.dart';
 import 'package:login_register/models/task_model.dart';
 
 class AddTaskScreen extends StatefulWidget {
@@ -17,8 +16,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController taskTitleController = TextEditingController();
   final TextEditingController taskTextController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    //*Widgets
     final addTaskButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(10),
@@ -112,7 +113,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   }
 
   addTask(String taskTitle, String taskText) {
-    //Firebase.postNewTaskToFirebase(task, widget.firebaseFirestore);
     if (_formKey.currentState!.validate()) {
       widget.tasks.add(Task(
           taskTitle,

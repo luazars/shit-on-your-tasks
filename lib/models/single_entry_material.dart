@@ -3,9 +3,9 @@ import 'package:login_register/models/task_model.dart';
 
 class SingleEntry extends StatelessWidget {
   final Task _task;
-  final Function setState;
+  final Function _setState;
 
-  const SingleEntry(this._task, this.setState, {Key? key}) : super(key: key);
+  const SingleEntry(this._task, this._setState, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +14,7 @@ class SingleEntry extends StatelessWidget {
         hoverColor: Colors.red,
         leading: Checkbox(
           value: _task.isDone,
-          onChanged: (value) {
-            _task.isDone = !_task.isDone;
-            setState();
-          },
+          onChanged: (value) => _setState(_task.isDone = !_task.isDone),
         ),
         title: Text(_task.title),
       ),

@@ -7,8 +7,6 @@ import 'package:login_register/shared/bg_widget.dart';
 import 'package:login_register/shared/button.dart';
 import 'package:progress_state_button/progress_button.dart';
 
-import '../services/firebase.dart';
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -17,8 +15,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // form key
   final _formKey = GlobalKey<FormState>();
+
+  final _auth = FirebaseAuth.instance;
 
   //editing controller
   final TextEditingController emailController = TextEditingController();
@@ -30,25 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final _auth = FirebaseAuth.instance;
-
-    void signIn(String email, String password) async {
-      if (_formKey.currentState!.validate()) {
-        setState(() => loading = true);
-        try {
-          await _auth
-              .signInWithEmailAndPassword(email: email, password: password)
-              .then((uid) {
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const HomeScreen()));
-          });
-        } on FirebaseAuthException catch (error) {
-          Fluttertoast.showToast(msg: error.code);
-          setState(() => loading = false);
-        }
-      }
-    }
-
+    //*Widgets
     final loginButton = BasicButton("Login", () {
       signIn(emailController.text, passwordController.text);
     }, false);
@@ -163,5 +144,22 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void signIn(String email, String password) async {
+    if (_formKey.currentState!.validate()) {
+      setState(() => loading = true);
+      try {
+        await _auth
+            .signInWithEmailAndPassword(email: email, password: password)
+            .then((uid) {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => const HomeScreen()));
+        });
+      } on FirebaseAuthException catch (error) {
+        Fluttertoast.showToast(msg: error.code);
+        setState(() => loading = false);
+      }
+    }
   }
 }
