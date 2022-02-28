@@ -263,7 +263,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             secondNameEditingController.text, _auth, _firebaseFirestore);
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const HomeScreen()),
+            MaterialPageRoute(builder: (context) => const HomeScreen(true)),
             (route) => false);
       }).catchError((e) {
         Fluttertoast.showToast(msg: e!.message);

@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:login_register/screens/add_task_screen.dart';
+import "package:flutter/material.dart";
+import "package:login_register/screens/add_task_screen.dart";
+import 'package:login_register/screens/detail_screen.dart';
 import 'package:login_register/shared/bg_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/single_entry_material.dart';
@@ -9,7 +9,8 @@ import '../services/firebase.dart';
 import 'dart:convert';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  final bool fromLoginScreen;
+  const HomeScreen(this.fromLoginScreen, {Key? key}) : super(key: key);
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -24,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    getDataFirebase();
+    widget.fromLoginScreen ? getDataFirebase() : getPref();
   }
 
   @override
@@ -55,48 +56,57 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
           //*Tasktile
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              SingleEntry(
-                tasks[index],
-                setStateOnHomescreen,
-              ),
-            ],
+          child: GestureDetector(
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: ((context) => DetailScreen(task: tasks[index])))),
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                SingleEntry(
+                  tasks[index],
+                  setStateOnHomescreen,
+                ),
+              ],
+            ),
           ),
         );
       },
     );
 
-    final addTasks = FloatingActionButton(
-        onPressed: (() => setState(() => Navigator.of(context).push(
-            MaterialPageRoute(
-                builder: ((context) =>
-                    AddTaskScreen(setStateOnHomescreen, tasks)))))),
-        child: const Icon(Icons.add_rounded));
-
     return Background(
       Scaffold(
           appBar: AppBar(
             title: const Text("Welcome back"),
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            elevation: 0,
             actions: [
               IconButton(
-                  icon: const Icon(Icons.get_app_rounded),
-                  onPressed: () => getPref()),
-              IconButton(
                   icon: const Icon(Icons.sync_rounded),
-                  onPressed: () => savePref()),
-              IconButton(
-                  icon: const Icon(Icons.logout_rounded),
                   onPressed: () {
-                    //Firebase.logout(context);
+                    syncFirebase();
+                    savePref();
+                  }),
+              IconButton(
+                  icon: const Icon(Icons.login_rounded),
+                  onPressed: () {
+                    syncFirebase();
+                    clearPref();
+                    Firebase.logout(context);
                   }),
             ],
           ),
 
           //*List with Tasktiles
           body: reorderableTaskList,
-          floatingActionButton: addTasks),
+          floatingActionButton: FloatingActionButton(
+              onPressed: (() {
+                setState(() {});
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: ((context) =>
+                        AddTaskScreen(setStateOnHomescreen, tasks))));
+              }),
+              child: const Icon(Icons.add_rounded))),
     );
   }
 
@@ -117,21 +127,25 @@ class _HomeScreenState extends State<HomeScreen> {
   //*SharedPreferences Methods
   savePref() async {
     final prefs = await SharedPreferences.getInstance();
+    List<String> listString = List.empty(growable: true);
     for (var i = 0; i < tasks.length; i++) {
-      prefs.setString("task $i", jsonEncode(tasks[i]));
+      listString.add(jsonEncode(Task.taskToMap(tasks[i])));
     }
-    Fluttertoast.showToast(msg: "send");
+    prefs.setStringList("tasks", listString);
   }
 
   getPref() async {
     final prefs = await SharedPreferences.getInstance();
-    int a = 0;
-    Task? task;
-    do {
-      task = jsonDecode(prefs.getString("task$a") ?? "");
-      tasks.add(task!);
-      a++;
-    } while (task != null);
-    Fluttertoast.showToast(msg: "da");
+    List<String> listString = prefs.getStringList("tasks") ?? [];
+    tasks.clear();
+    for (var i = 0; i < listString.length; i++) {
+      tasks.add(Task.mapToTask(jsonDecode(listString[i])));
+    }
+    setState(() {});
+  }
+
+  void clearPref() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setStringList("tasks", []);
   }
 }

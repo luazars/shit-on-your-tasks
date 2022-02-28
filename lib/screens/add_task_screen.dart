@@ -72,6 +72,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     final taskTextField = Column(
       children: [
         TextFormField(
+          minLines: 5,
+          maxLines: 5,
           autofocus: false,
           controller: taskTextController,
           keyboardType: TextInputType.text,
@@ -79,7 +81,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           onSaved: (value) {
             taskTextController.text = value ?? "";
           },
-          textInputAction: TextInputAction.next,
+          textInputAction: TextInputAction.done,
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
             hintText: "Notes",
@@ -118,8 +120,12 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           taskTitle,
           taskText,
           false,
-          Color.fromARGB(250, Random().nextInt(100) + 150,
-              Random().nextInt(100), Random().nextInt(100)),
+          Color.fromARGB(
+            250,
+            Random().nextInt(100),
+            Random().nextInt(100),
+            Random().nextInt(100) + 100,
+          ),
           widget.tasks.length));
       Navigator.pop(context);
       widget.setStateMain();

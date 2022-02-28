@@ -14,7 +14,10 @@ class SingleEntry extends StatelessWidget {
         hoverColor: Colors.red,
         leading: Checkbox(
           value: _task.isDone,
-          onChanged: (value) => _setState(_task.isDone = !_task.isDone),
+          onChanged: (value) {
+            _setState();
+            _task.isDone = !_task.isDone;
+          },
         ),
         title: Text(_task.title),
       ),

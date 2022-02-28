@@ -19,8 +19,8 @@ class Firebase {
   static final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
   //*User Login and Registration
-  static Future<void> logout(BuildContext context, FirebaseAuth _auth) async {
-    await _auth.signOut();
+  static Future<void> logout(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
           builder: (context) => const LoginScreen(),

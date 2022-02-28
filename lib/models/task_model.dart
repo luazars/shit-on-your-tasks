@@ -32,12 +32,13 @@ class Task {
     return taskMap;
   }
 
-  static List<Task> mapToTask(List<Map<String, dynamic>> taskMap) {
-    List<Task> tasks = List.empty(growable: true);
-    for (var i = 0; i < taskMap.length; i++) {
-      tasks.add(Task(taskMap[i]["title"], taskMap[i]["text"],
-          taskMap[i]["isDone"], taskMap[i]["color"], taskMap[i]["index"]));
-    }
-    return tasks;
+  static Task mapToTask(Map<String, dynamic> taskMap) {
+    return Task(
+        taskMap["title"],
+        taskMap["text"],
+        taskMap["isDone"],
+        Color.fromARGB(
+            250, taskMap["color"][0], taskMap["color"][1], taskMap["color"][2]),
+        taskMap["index"]);
   }
 }
