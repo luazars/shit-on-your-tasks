@@ -15,7 +15,6 @@ class DetailScreen extends StatelessWidget {
       body: Container(
         height: double.infinity,
         width: double.infinity,
-        decoration: BoxDecoration(color: task.color),
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: Column(

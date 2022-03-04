@@ -25,17 +25,12 @@ class MyApp extends StatelessWidget {
   ThemeData baisTheme() {
     final baisTheme = ThemeData.dark();
     return baisTheme.copyWith(
-      splashColor: Colors.red,
-      iconTheme: const IconThemeData(
-        color: Colors.white,
-      ),
-      colorScheme: ColorScheme.fromSwatch().copyWith(
-        secondary: Color.fromARGB(255, 53, 177, 185),
-        primary: Colors.red,
-        outline: Colors.white,
-        onBackground: Colors.blue,
-      ),
-    );
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+      // primary: Color.fromARGB(255, 150, 21, 224),
+      // secondary: Colors.blueAccent,
+      outline: Colors.white,
+      onBackground: Colors.blue,
+    ));
   }
 }
 

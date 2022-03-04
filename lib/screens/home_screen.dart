@@ -1,4 +1,5 @@
 import "package:flutter/material.dart";
+import 'package:fluttertoast/fluttertoast.dart';
 import "package:login_register/screens/add_task_screen.dart";
 import 'package:login_register/screens/detail_screen.dart';
 import 'package:login_register/shared/bg_widget.dart';
@@ -43,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
           key: ValueKey(
               tasks[index].title + tasks.length.toString() + index.toString()),
           onDismissed: (value) => setState(() => tasks.removeAt(index)),
-
+          direction: DismissDirection.startToEnd,
           //*BG of Dismissible
           background: Padding(
             padding: const EdgeInsets.only(left: 10),
@@ -90,9 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
               IconButton(
                   icon: const Icon(Icons.login_rounded),
                   onPressed: () {
-                    syncFirebase();
-                    clearPref();
-                    Firebase.logout(context);
+                    logout(context);
                   }),
             ],
           ),
@@ -110,12 +109,24 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void logout(BuildContext context) async {
+    if (!await sync()) {
+      clearPref();
+      Firebase.logout(context);
+    } else {
+      Fluttertoast.showToast(msg: "Try again with internet");
+    }
+  }
+
   //*Firebase Methods
-  Future<void> syncFirebase() async {
+  Future<bool> syncFirebase() async {
     await Firebase.clearTasksOnFirebase();
     for (var i = 0; i < tasks.length; i++) {
-      Firebase.pushToFirebase(tasks[i]);
+      if (!await Firebase.pushToFirebase(tasks[i])) {
+        return false;
+      }
     }
+    return true;
   }
 
   Future<void> getDataFirebase() async {
@@ -147,5 +158,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void clearPref() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setStringList("tasks", []);
+  }
+
+  Future<bool> sync() async {
+    savePref();
+    if (!await syncFirebase()) {
+      return false;
+    }
+    return true;
   }
 }

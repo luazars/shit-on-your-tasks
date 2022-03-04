@@ -17,6 +17,20 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   final TextEditingController taskTitleController = TextEditingController();
   final TextEditingController taskTextController = TextEditingController();
 
+  int colorSelected = 0;
+  final List<Color> colors = [
+    Colors.white,
+    Colors.grey,
+    Colors.black,
+    Colors.red,
+    Colors.orange,
+    Colors.yellow,
+    Colors.green,
+    Colors.blue,
+    Colors.purple,
+    Colors.pink,
+  ];
+
   @override
   Widget build(BuildContext context) {
     //*Widgets
@@ -94,6 +108,40 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       ],
     );
 
+    final colorPicker = Center(
+        child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: colors.length,
+      itemBuilder: ((context, index) => Stack(
+            alignment: Alignment.center,
+            children: [
+              if (index == colorSelected)
+                Container(
+                  height: 30,
+                  width: 30,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(6)),
+                    color: Theme.of(context).colorScheme.primary.withAlpha(100),
+                  ),
+                ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  child: Container(
+                    height: 20,
+                    width: 20,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(4)),
+                      color: colors[index],
+                    ),
+                  ),
+                  onTap: () => setState(() => colorSelected = index),
+                ),
+              ),
+            ],
+          )),
+    ));
+
     return Scaffold(
       appBar: AppBar(title: const Text("Add you task")),
       body: Form(
@@ -105,6 +153,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
             children: [
               taskTitleField,
               taskTextField,
+              SizedBox(
+                child: colorPicker,
+                height: 50,
+              ),
               const SizedBox(height: 20),
               addTaskButton,
             ],
@@ -116,16 +168,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   addTask(String taskTitle, String taskText) {
     if (_formKey.currentState!.validate()) {
-      widget.tasks.add(Task(
-          taskTitle,
-          taskText,
-          false,
-          Color.fromARGB(
-            250,
-            Random().nextInt(100),
-            Random().nextInt(100),
-            Random().nextInt(100) + 100,
-          ),
+      widget.tasks.add(Task(taskTitle, taskText, false, colors[colorSelected],
           widget.tasks.length));
       Navigator.pop(context);
       widget.setStateMain();
