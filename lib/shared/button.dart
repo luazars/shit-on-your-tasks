@@ -15,6 +15,7 @@ class BasicButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       elevation: 5,
+      color: Theme.of(context).colorScheme.primary,
       borderRadius: BorderRadius.circular(10),
       child: MaterialButton(
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
@@ -25,9 +26,11 @@ class BasicButton extends StatelessWidget {
           children: [
             if (isLoadingButton)
               Row(
-                children: const [
+                children: [
                   SizedBox(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                    ),
                     height: 20,
                     width: 20,
                   ),

@@ -3,9 +3,10 @@ import 'package:login_register/models/task_model.dart';
 
 class SingleEntry extends StatelessWidget {
   final Task _task;
-  final Function _setState, _reorder;
+  final List<Task> _tasks;
+  final Function _setState;
 
-  const SingleEntry(this._task, this._setState, this._reorder, {Key? key})
+  const SingleEntry(this._task, this._setState, this._tasks, {Key? key})
       : super(key: key);
 
   @override
@@ -24,7 +25,7 @@ class SingleEntry extends StatelessWidget {
             onChanged: (value) {
               _task.isDone = !_task.isDone;
               _setState();
-              if (value == true) _reorder(_task);
+              if (value == true) Task.reorderToLast(_task, _tasks);
             },
           ),
           Padding(

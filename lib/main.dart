@@ -17,45 +17,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: baisTheme(),
-      home: const RoutePage(),
+      theme: ThemeData.dark(),
+      // home: const RoutePage(),
+      home: const HomeScreen(false),
     );
   }
 
-  ThemeData baisTheme() {
-    final baisTheme = ThemeData.dark();
-    return baisTheme.copyWith(
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-      // primary: Color.fromARGB(255, 150, 21, 224),
-      // secondary: Colors.blueAccent,
-      outline: Colors.white,
-      onBackground: Colors.blue,
-    ));
-  }
-}
-
-class RoutePage extends StatefulWidget {
-  const RoutePage({Key? key}) : super(key: key);
-
-  @override
-  RoutePageState createState() => RoutePageState();
-}
-
-class RoutePageState extends State<RoutePage> {
-  bool isLoggedin = false;
-  @override
-  void initState() {
-    super.initState();
-    FirebaseAuth.instance.authStateChanges().listen((User? user) {
-      if (user == null) {
-        setState(() => isLoggedin = false);
-      } else {
-        setState(() => isLoggedin = true);
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) =>
-      isLoggedin == true ? const HomeScreen(false) : const LoginScreen();
+  // ThemeData baisTheme() {
+  //   final baisTheme = ThemeData.dark();
+  //   return baisTheme.copyWith(
+  //       colorScheme: ColorScheme.fromSwatch().copyWith(
+  //     // primary: Color.fromARGB(255, 150, 21, 224),
+  //     // secondary: Colors.blueAccent,
+  //     outline: Colors.white,
+  //     onBackground: Colors.blue,
+  //   ));
+  // }
 }

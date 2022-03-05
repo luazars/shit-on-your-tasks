@@ -16,6 +16,10 @@ class Task {
     _tasks.insert(_newIndex, item);
   }
 
+  static reorderToLast(Task task, List<Task> tasks) {
+    reorderTaskList(tasks, tasks.indexOf(task), tasks.length);
+  }
+
   static Map<String, dynamic> taskToMap(Task task) {
     Map<String, dynamic> taskMap = {};
     taskMap["title"] = task.title;
@@ -25,7 +29,7 @@ class Task {
       task.color.red,
       task.color.green,
       task.color.blue,
-      1 //full Opasity
+      250
     ];
     taskMap["index"] = task.index;
 

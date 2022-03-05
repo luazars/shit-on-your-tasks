@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login_register/screens/home_screen.dart';
-import 'package:login_register/shared/bg_widget.dart';
 import 'package:login_register/shared/button.dart';
 
 import '../services/firebase.dart';
@@ -216,34 +215,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ],
     );
 
-    return Background(
-      Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_outlined),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_outlined),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        body: Center(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    firstNameTextField,
-                    secondNameTextField,
-                    emailTextField,
-                    passwordTextField,
-                    confirmTextField,
-                    loading ? loadingButton : signUpButton,
-                  ],
-                ),
+      ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  firstNameTextField,
+                  secondNameTextField,
+                  emailTextField,
+                  passwordTextField,
+                  confirmTextField,
+                  loading ? loadingButton : signUpButton,
+                ],
               ),
             ),
           ),

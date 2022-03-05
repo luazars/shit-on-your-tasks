@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:login_register/models/task_model.dart';
+import 'package:login_register/services/shared_preferences.dart';
+import 'package:login_register/services/sync.dart';
 import '../models/user_material.dart';
 import '../screens/login_screen.dart';
 
@@ -19,7 +21,9 @@ class Firebase {
   static final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
   //*User Login and Registration
-  static Future<void> logout(BuildContext context) async {
+  static void logout(BuildContext context, List<Task> tasks) async {
+    Sync.sync(tasks);
+    LocalData.clearPref();
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
