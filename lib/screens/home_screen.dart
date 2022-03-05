@@ -1,7 +1,5 @@
 import "package:flutter/material.dart";
-import 'package:fluttertoast/fluttertoast.dart';
 import "package:login_register/screens/add_task_screen.dart";
-import 'package:login_register/screens/detail_screen.dart';
 import 'package:login_register/shared/bg_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/single_entry_material.dart';
@@ -107,7 +105,11 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
           //*List with Tasktiles
-          body: reorderableTaskList,
+          body: tasks.isEmpty
+              ? const Center(
+                  child: Text("Everything done. \nTake a break! \n;)"),
+                )
+              : reorderableTaskList,
           floatingActionButton: FloatingActionButton(
               onPressed: (() {
                 setState(() {});

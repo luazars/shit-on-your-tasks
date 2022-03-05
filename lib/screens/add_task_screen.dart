@@ -1,14 +1,13 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:login_register/models/task_model.dart';
 
 class AddTaskScreen extends StatefulWidget {
   final Function setStateMain;
   final List tasks;
-  bool isEdit;
-  Task? taskToEdit;
+  final bool isEdit;
+  final Task? taskToEdit;
 
-  AddTaskScreen(this.setStateMain, this.tasks,
+  const AddTaskScreen(this.setStateMain, this.tasks,
       {this.isEdit = false, this.taskToEdit, Key? key})
       : super(key: key);
 
@@ -41,7 +40,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       taskTitleController.text = widget.taskToEdit!.title;
       taskTextController.text = widget.taskToEdit!.text;
       colorSelected = colors.indexOf(widget.taskToEdit!.color);
-      print(colorSelected);
     }
   }
 
