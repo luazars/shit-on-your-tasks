@@ -5,7 +5,11 @@ import 'package:login_register/models/task_model.dart';
 class AddTaskScreen extends StatefulWidget {
   final Function setStateMain;
   final List tasks;
-  const AddTaskScreen(this.setStateMain, this.tasks, {Key? key})
+  bool isEdit;
+  Task? taskToEdit;
+
+  AddTaskScreen(this.setStateMain, this.tasks,
+      {this.isEdit = false, this.taskToEdit, Key? key})
       : super(key: key);
 
   @override
@@ -30,6 +34,16 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     Colors.purple,
     Colors.pink,
   ];
+  @override
+  void initState() {
+    super.initState();
+    if (widget.isEdit) {
+      taskTitleController.text = widget.taskToEdit!.title;
+      taskTextController.text = widget.taskToEdit!.text;
+      colorSelected = colors.indexOf(widget.taskToEdit!.color);
+      print(colorSelected);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +55,18 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
         minWidth: MediaQuery.of(context).size.width,
         onPressed: () {
-          addTask(taskTitleController.text, taskTextController.text);
+          if (!widget.isEdit) {
+            addTask(taskTitleController.text, taskTextController.text,
+                colors[colorSelected]);
+          } else {
+            replaceTask(taskTitleController.text, taskTextController.text,
+                colors[colorSelected]);
+          }
         },
-        child: const Text(
-          "Add Task",
+        child: Text(
+          widget.isEdit ? "Save Task" : "Add Task",
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -143,7 +163,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     ));
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Add you task")),
+      appBar: AppBar(
+          title: Text(widget.isEdit ? "Edit your task" : "Add new task")),
       body: Form(
         key: _formKey,
         child: Padding(
@@ -166,10 +187,23 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     );
   }
 
-  addTask(String taskTitle, String taskText) {
+  addTask(String taskTitle, String taskText, Color color) {
     if (_formKey.currentState!.validate()) {
-      widget.tasks.add(Task(taskTitle, taskText, false, colors[colorSelected],
-          widget.tasks.length));
+      widget.tasks
+          .add(Task(taskTitle, taskText, false, color, widget.tasks.length));
+      Navigator.pop(context);
+      widget.setStateMain();
+    }
+  }
+
+  replaceTask(String taskTitle, String taskText, Color color) {
+    if (_formKey.currentState!.validate()) {
+      var index = widget.tasks.indexOf(widget.taskToEdit);
+      widget.tasks.removeAt(index);
+      widget.tasks.insert(
+          index,
+          Task(taskTitle, taskText, widget.taskToEdit!.isDone, color,
+              widget.taskToEdit!.index));
       Navigator.pop(context);
       widget.setStateMain();
     }

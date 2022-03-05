@@ -59,7 +59,12 @@ class _HomeScreenState extends State<HomeScreen> {
           //*Tasktile
           child: GestureDetector(
             onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                builder: ((context) => DetailScreen(task: tasks[index])))),
+                builder: ((context) => AddTaskScreen(
+                      setStateOnHomescreen,
+                      tasks,
+                      isEdit: true,
+                      taskToEdit: tasks[index],
+                    )))),
             child: Column(
               children: [
                 const SizedBox(height: 10),

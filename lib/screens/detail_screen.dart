@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/task_model.dart';
+import 'add_task_screen.dart';
 
 class DetailScreen extends StatelessWidget {
   final Task task;

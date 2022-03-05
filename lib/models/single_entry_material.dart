@@ -27,7 +27,7 @@ class SingleEntry extends StatelessWidget {
               alignment: Alignment.center,
               children: [
                 Text(
-                  _task.title,
+                  _task.title + _task.index.toString(),
                   style: TextStyle(
                     fontWeight:
                         _task.isDone ? FontWeight.normal : FontWeight.w500,
