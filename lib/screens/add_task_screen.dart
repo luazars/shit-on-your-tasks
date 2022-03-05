@@ -129,38 +129,40 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     );
 
     final colorPicker = Center(
-        child: ListView.builder(
-      scrollDirection: Axis.horizontal,
-      itemCount: colors.length,
-      itemBuilder: ((context, index) => Stack(
-            alignment: Alignment.center,
-            children: [
-              if (index == colorSelected)
-                Container(
-                  height: 30,
-                  width: 30,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(6)),
-                    color: Theme.of(context).colorScheme.primary.withAlpha(100),
-                  ),
-                ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  child: Container(
-                    height: 20,
-                    width: 20,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: colors.length,
+        itemBuilder: ((context, index) => Stack(
+              alignment: Alignment.center,
+              children: [
+                if (index == colorSelected)
+                  Container(
+                    height: 30,
+                    width: 30,
                     decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(4)),
+                      borderRadius: const BorderRadius.all(Radius.circular(6)),
                       color: colors[index],
                     ),
                   ),
-                  onTap: () => setState(() => colorSelected = index),
+                Padding(
+                  padding: const EdgeInsets.all(7.0),
+                  child: GestureDetector(
+                    child: Container(
+                      height: 20,
+                      width: 20,
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(4)),
+                        color: colors[index],
+                      ),
+                    ),
+                    onTap: () => setState(() => colorSelected = index),
+                  ),
                 ),
-              ),
-            ],
-          )),
-    ));
+              ],
+            )),
+      ),
+    );
 
     return Scaffold(
       appBar: AppBar(

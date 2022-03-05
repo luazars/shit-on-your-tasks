@@ -18,7 +18,10 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   //*Set state Function for other classes
-  setStateOnHomescreen() => setState(() {});
+  setStateOnHomescreen() {
+    setState(() {});
+    sync();
+  }
 
   //*List with Tasks
   List<Task> tasks = List.empty(growable: true);
@@ -26,7 +29,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    widget.fromLoginScreen ? getDataFirebase() : getPref();
+    if (widget.fromLoginScreen) {
+      getDataFirebase();
+      savePref();
+    } else {
+      getPref();
+    }
   }
 
   @override
@@ -34,8 +42,10 @@ class _HomeScreenState extends State<HomeScreen> {
     //*Widgets
 
     final reorderableTaskList = ReorderableListView.builder(
-      onReorder: ((oldIndex, newIndex) =>
-          Task.reorderTaskList(tasks, oldIndex, newIndex)),
+      onReorder: ((oldIndex, newIndex) {
+        Task.reorderTaskList(tasks, oldIndex, newIndex);
+        sync();
+      }),
       itemCount: tasks.length,
       padding: const EdgeInsets.all(10),
       itemBuilder: (BuildContext context, int index) {
@@ -43,7 +53,10 @@ class _HomeScreenState extends State<HomeScreen> {
         return Dismissible(
           key: ValueKey(
               tasks[index].title + tasks.length.toString() + index.toString()),
-          onDismissed: (value) => setState(() => tasks.removeAt(index)),
+          onDismissed: (value) {
+            setState(() => tasks.removeAt(index));
+            sync();
+          },
           direction: DismissDirection.startToEnd,
           //*BG of Dismissible
           background: Padding(
@@ -67,11 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     )))),
             child: Column(
               children: [
-                const SizedBox(height: 10),
-                SingleEntry(
-                  tasks[index],
-                  setStateOnHomescreen,
-                ),
+                //const SizedBox(height: 10),
+                SingleEntry(tasks[index], setStateOnHomescreen, reorder),
               ],
             ),
           ),
@@ -82,17 +92,12 @@ class _HomeScreenState extends State<HomeScreen> {
     return Background(
       Scaffold(
           appBar: AppBar(
-            title: const Text("Welcome back"),
+            title:
+                Text("Welcome back " + (Firebase.loggedInUser.firstName ?? "")),
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,
             elevation: 0,
             actions: [
-              IconButton(
-                  icon: const Icon(Icons.sync_rounded),
-                  onPressed: () {
-                    syncFirebase();
-                    savePref();
-                  }),
               IconButton(
                   icon: const Icon(Icons.login_rounded),
                   onPressed: () {
@@ -115,23 +120,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void logout(BuildContext context) async {
-    if (!await sync()) {
-      clearPref();
-      Firebase.logout(context);
-    } else {
-      Fluttertoast.showToast(msg: "Try again with internet");
-    }
+    sync();
+    clearPref();
+    Firebase.logout(context);
   }
 
   //*Firebase Methods
-  Future<bool> syncFirebase() async {
+  syncFirebase() async {
     await Firebase.clearTasksOnFirebase();
     for (var i = 0; i < tasks.length; i++) {
-      if (!await Firebase.pushToFirebase(tasks[i])) {
-        return false;
-      }
+      await Firebase.pushToFirebase(tasks[i]);
     }
-    return true;
   }
 
   Future<void> getDataFirebase() async {
@@ -165,11 +164,12 @@ class _HomeScreenState extends State<HomeScreen> {
     prefs.setStringList("tasks", []);
   }
 
-  Future<bool> sync() async {
+  sync() {
     savePref();
-    if (!await syncFirebase()) {
-      return false;
-    }
-    return true;
+    syncFirebase();
+  }
+
+  reorder(Task task) {
+    Task.reorderTaskList(tasks, tasks.indexOf(task), tasks.length);
   }
 }

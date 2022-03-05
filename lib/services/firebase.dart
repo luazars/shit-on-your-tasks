@@ -58,19 +58,15 @@ class Firebase {
     }
   }
 
-  static Future<bool> pushToFirebase(Task task) async {
-    bool a = true;
+  static pushToFirebase(Task task) async {
     await firebaseFirestore
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser?.uid)
         .collection("tasks")
         .doc(task.title + task.color.toString())
         .set(Task.taskToMap(task))
-        .onError((error, stackTrace) {
-      a = false;
-      return Fluttertoast.showToast(msg: error.toString());
-    });
-    return a;
+        .onError((error, stackTrace) =>
+            Fluttertoast.showToast(msg: error.toString()));
   }
 
   static Future<List<Task>?> pullFromFirebase() async {
