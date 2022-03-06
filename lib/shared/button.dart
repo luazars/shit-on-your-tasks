@@ -14,7 +14,7 @@ class BasicButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      elevation: 5,
+      elevation: 0,
       color: Theme.of(context).colorScheme.primary,
       borderRadius: BorderRadius.circular(10),
       child: MaterialButton(

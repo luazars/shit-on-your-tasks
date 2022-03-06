@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
       itemCount: tasks.length,
       padding: const EdgeInsets.all(10),
       itemBuilder: (BuildContext context, int index) {
-        //* Dismissible Tasktile
+        //* Dismissible Task-tile
         return Dismissible(
           key: ValueKey(
               tasks[index].title + tasks.length.toString() + index.toString()),
@@ -60,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
 
-          //*Tasktile
+          //*Task-tile
           child: GestureDetector(
             onTap: () => Navigator.of(context).push(MaterialPageRoute(
                 builder: ((context) => AddTaskScreen(
@@ -84,8 +84,6 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           title:
               Text("Welcome back " + (Firebase.loggedInUser.firstName ?? "")),
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
           elevation: 0,
           actions: [
             IconButton(
@@ -96,7 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
 
-        //*List with Tasktiles
+        //*List with Task-tiles
         body: tasks.isEmpty
             ? const Center(
                 child: Text("Everything done. \nTake a break! \n;)"),

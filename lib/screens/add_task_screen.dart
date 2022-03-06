@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:login_register/models/task_model.dart';
+import "package:flutter/material.dart";
+import "package:login_register/models/task_model.dart";
 
 class AddTaskScreen extends StatefulWidget {
   final Function setStateMain;
-  final List tasks;
+  final List<Task> tasks;
   final bool isEdit;
   final Task? taskToEdit;
 
@@ -47,7 +47,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Widget build(BuildContext context) {
     //*Widgets
     final addTaskButton = Material(
-      elevation: 5,
+      color: Theme.of(context).colorScheme.primary,
+      elevation: 0,
       borderRadius: BorderRadius.circular(10),
       child: MaterialButton(
         padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
@@ -143,7 +144,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     ),
                   ),
                 Padding(
-                  padding: const EdgeInsets.all(7.0),
+                  padding: const EdgeInsets.all(7.5),
                   child: GestureDetector(
                     child: Container(
                       height: 20,
@@ -188,17 +189,19 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   }
 
   addTask(String taskTitle, String taskText, Color color) {
+    int indexLastIsDone =
+        widget.tasks.lastIndexWhere((element) => element.isDone == false);
     if (_formKey.currentState!.validate()) {
-      widget.tasks
-          .add(Task(taskTitle, taskText, false, color, widget.tasks.length));
-      Navigator.pop(context);
-      widget.setStateMain();
+      widget.tasks.insert(indexLastIsDone + 1,
+          Task(taskTitle, taskText, false, color, indexLastIsDone + 1));
     }
+    Navigator.pop(context);
+    widget.setStateMain();
   }
 
   replaceTask(String taskTitle, String taskText, Color color) {
     if (_formKey.currentState!.validate()) {
-      var index = widget.tasks.indexOf(widget.taskToEdit);
+      var index = widget.tasks.indexOf(widget.taskToEdit!);
       widget.tasks.removeAt(index);
       widget.tasks.insert(
           index,

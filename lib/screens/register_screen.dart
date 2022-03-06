@@ -217,7 +217,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_outlined),

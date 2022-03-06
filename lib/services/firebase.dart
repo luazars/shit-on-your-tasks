@@ -67,7 +67,7 @@ class Firebase {
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser?.uid)
         .collection("tasks")
-        .doc(task.title + task.color.toString())
+        .doc("task:  $task.title  created at: $Timestamp.now()")
         .set(Task.taskToMap(task))
         .onError((error, stackTrace) =>
             Fluttertoast.showToast(msg: error.toString()));

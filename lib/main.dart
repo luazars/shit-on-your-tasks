@@ -1,8 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:login_register/screens/home_screen.dart';
-import 'package:login_register/screens/login_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,15 +15,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
-      // home: const RoutePage(),
-      home: const HomeScreen(false),
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: ThemeMode.system,
+      //home: const RoutePage(),
+      home: const HomeScreen(true),
     );
   }
 
-  // ThemeData baisTheme() {
-  //   final baisTheme = ThemeData.dark();
-  //   return baisTheme.copyWith(
+  // ThemeData darkTheme() {
+  //   final darkTheme = ThemeData.dark();
+  //   return darkTheme.copyWith(
   //       colorScheme: ColorScheme.fromSwatch().copyWith(
   //     // primary: Color.fromARGB(255, 150, 21, 224),
   //     // secondary: Colors.blueAccent,
