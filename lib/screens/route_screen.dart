@@ -12,20 +12,20 @@ class RoutePage extends StatefulWidget {
 }
 
 class RoutePageState extends State<RoutePage> {
-  bool isLoggedin = false;
+  bool isLoggedIn = false;
   @override
   void initState() {
     super.initState();
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
-        setState(() => isLoggedin = false);
+        isLoggedIn = false;
       } else {
-        setState(() => isLoggedin = true);
+        isLoggedIn = true;
       }
     });
   }
 
   @override
   Widget build(BuildContext context) =>
-      isLoggedin == true ? const HomeScreen(false) : const LoginScreen();
+      isLoggedIn == true ? const HomeScreen(false) : const LoginScreen();
 }

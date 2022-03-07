@@ -11,11 +11,11 @@ class Sync {
     }
   }
 
-  static Future<void> getDataFirebase(
-      List<Task> tasks, Function setState) async {
+  static Future<List<Task>> getDataFirebase(List<Task> tasks) async {
     tasks = (await Firebase.pullFromFirebase())!;
     tasks.sort((a, b) => a.index.compareTo(b.index));
-    setState();
+
+    return tasks;
   }
 
   static sync(List<Task> tasks) {

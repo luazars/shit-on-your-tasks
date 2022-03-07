@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.login_register">
+    
    <application
-        android:label="login_register"
+        android:label="Simple:Tasks"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

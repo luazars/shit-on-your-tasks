@@ -19,13 +19,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    super.initState();
     if (widget.fromLoginScreen) {
-      Sync.getDataFirebase(tasks, setStateOnHomeScreen);
+      getData();
       LocalData.savePref(tasks);
     } else {
-      setState(() => LocalData.getPref(tasks));
+      LocalData.getPref(tasks);
     }
+    super.initState();
   }
 
   @override
@@ -114,5 +114,10 @@ class _HomeScreenState extends State<HomeScreen> {
   void setStateOnHomeScreen() {
     setState(() {});
     Sync.sync(tasks);
+  }
+
+  getData() async {
+    tasks = await Sync.getDataFirebase(tasks);
+    setState(() {});
   }
 }
